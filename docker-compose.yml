@@ -1,0 +1,76 @@
+services:
+    mysql:
+        build:
+            context: .
+            dockerfile: docker/mysql/Dockerfile
+        container_name: backend_mysql
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: sme
+            MYSQL_ROOT_USERNAME: root
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - ./docker/mysql/db:/docker-entrypoint-initdb.d
+            - ./docker/mysql/data:/var/lib/mysql
+        networks:
+            - net
+
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: backend_phpmyadmin
+        restart: unless-stopped
+        tty: true
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_USER: root
+            PMA_PASSWORD: root
+            PMA_ARBITRARY: 1
+            PMA_ABSOLUTE_URI: http://localhost/phpmyadmin
+        networks:
+            - net
+        depends_on:
+            - mysql
+            - app
+
+    app:
+        build:
+            context: .
+            dockerfile: docker/app/Dockerfile
+        container_name: backend_app
+        environment:
+            - DOCKER_ENV=true
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www/html:cached
+            - /var/www/html/node_modules
+            - /var/www/html/.git
+            - /var/www/html/.vscode
+            - /var/www/html/docker
+            - /var/www/html/storage
+            - /var/www/html/vendor
+        develop:
+            watch:
+                - action: sync
+                  path: ./
+                  target: /var/www/html
+                  ignore:
+                    - node_modules/
+                    - .git/
+                    - .vscode/
+                    - cypress/
+                    - docker/
+                    - storage/
+                    - vendor/
+        networks:
+            - net
+        depends_on:
+            - mysql
+
+networks:
+    net:
+        driver: bridge
