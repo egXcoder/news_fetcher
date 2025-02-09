@@ -28,7 +28,7 @@ COPY docker/app/vhost.conf /etc/apache2/sites-available/000-default.conf
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN chown -R www-data:www-data /var/www/html && a2enmod rewrite
+RUN chmod -R 775 /var/www/html && chown -R www-data:www-data /var/www/html && a2enmod rewrite
 
 RUN a2enmod proxy proxy_http
 

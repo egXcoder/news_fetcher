@@ -51,7 +51,6 @@ services:
             - /var/www/html/.git
             - /var/www/html/.vscode
             - /var/www/html/docker
-            - /var/www/html/storage
             - /var/www/html/vendor
         develop:
             watch:
