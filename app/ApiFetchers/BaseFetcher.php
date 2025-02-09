@@ -2,6 +2,7 @@
 
 namespace App\ApiFetchers;
 
+use App\Models\FetcherNextStatus;
 use DateTime;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -18,15 +19,15 @@ abstract class BaseFetcher{
         $last_updated_at = $next_successful_fetch[0];
         $page_no = $next_successful_fetch[1];
         
-        $this->set_debug('Starting fetching for -- class=' . class_basename($this));
-        $this->set_debug('from lastUpdatedDate=' . $last_updated_at);
+        $this->set_debug('Starting fetching for -- class= ' . class_basename($this));
+        $this->set_debug('from lastUpdatedDate= ' . $last_updated_at);
 
         if(!$this->validateDate($last_updated_at)){
             throw new \Exception("Please make sure last updated date is valid date");
         }
 
         while(true){
-            $this->set_debug('fetching page no =' . $page_no);
+            $this->set_debug('fetching page no = ' . $page_no);
 
             $data = $this->fetch($last_updated_at,$page_no);
 
@@ -42,18 +43,22 @@ abstract class BaseFetcher{
                 return false;
             }
 
-            dd($data);
-
             $this->set_debug('fetched data with length = ' . count($data));
+            $this->set_debug('fetched: ' . json_encode($data));
 
-            DB::transaction(function()use($data,$last_updated_at,$page_no){
-                $this->save($data);
+            DB::beginTransaction();
 
-                $page_no++;
-                
-                $this->setNextSuccessfulFetch($last_updated_at,$page_no);
-            });
+            $this->save($data);
+
+            $page_no++;
             
+            $this->setNextSuccessfulFetch($last_updated_at,$page_no);
+            
+            DB::commit();
+
+            $this->set_debug('data saved in database');
+            $this->set_debug('sleeping...');
+
             sleep(10);
         }
 
@@ -67,23 +72,27 @@ abstract class BaseFetcher{
         $key = class_basename($this);
 
         return [
-            Cache::get($key . "_updated_at",date('Y-m-d H:i:s',strtotime('-1 month'))),
-            Cache::get($key . "_page_no",1),
+            FetcherNextStatus::where('key',$key)->value('next_datetime') ?: date('Y-m-d H:i:s',strtotime('-2 day')),
+            FetcherNextStatus::where('key',$key)->value('next_page_no') ?: 1,
         ];
     }
 
     /**
-     * @param string $last_updated_at Y-m-d H:i:s
+     * @param string $updated_at Y-m-d H:i:s
      * @param int $page_no
      */
-    private function setNextSuccessfulFetch($datetime,$page_no){
+    private function setNextSuccessfulFetch($updated_at,$page_no){
         $key = class_basename($this);
 
-        Cache::put($key . "_updated_at",$datetime);
-        Cache::put($key . "_page_no",$page_no);
+        FetcherNextStatus::updateOrCreate([
+            'key'=>$key,
+        ],[
+            'next_datetime'=>$updated_at,
+            'next_page_no'=>$page_no
+        ]);
     }
 
-    private function set_debug($debug) {
+    protected function set_debug($debug) {
         dump($debug);
 	}
 
