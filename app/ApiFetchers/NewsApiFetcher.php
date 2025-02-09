@@ -2,6 +2,7 @@
 
 namespace App\ApiFetchers;
 
+use App\Models\Article;
 use Illuminate\Support\Facades\Http;
 
 class NewsApiFetcher extends BaseFetcher{
@@ -32,6 +33,12 @@ class NewsApiFetcher extends BaseFetcher{
 
     protected function save($data)
     {
-        
+        foreach($data as $single){
+            Article::updateOrCreate([
+
+            ],[
+
+            ]);
+        }
     }
 }
