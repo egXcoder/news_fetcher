@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Http;
 class NewsApiFetcher extends BaseFetcher{
     /**
      * please notice, free plan only allows 100 request every day, so we need to be careful to throttle this
-     * we can add a logic on this class to try to track the allowed number of requests per day, and try to distribute
-     * this number per day.. this will be nice to have maybe i will work on it later
      */
     protected function fetch($last_updated_at, $page_no)
     {
@@ -21,6 +19,8 @@ class NewsApiFetcher extends BaseFetcher{
             'page'=>$page_no,
             'pageSize'=>100,
             'from'=>date('c',strtotime($last_updated_at)),
+            'sortBy'=>'publishedAt',
+            'language'=>'en' //i think we will be only interested in english sources for now
         ]);
             
         $response = $response->json();

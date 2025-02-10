@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\ApiFetchers\NewsApiFetcher;
 use Illuminate\Console\Command;
 
-class fetchNewsCommand extends Command
+class FetchNewsApiCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'news:fetch';
+    protected $signature = 'newsapi:fetch';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fetch News From Apis';
+    protected $description = 'Fetch From News API';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,7 @@ class fetchNewsCommand extends Command
      */
     public function handle()
     {
-        $newsApiFetcher = new NewsApiFetcher;
-        $newsApiFetcher->fetchRecentNews();
+        $fetcher = new NewsApiFetcher;
+        $fetcher->fetchRecentNews();
     }
 }

@@ -70,9 +70,10 @@ abstract class BaseFetcher{
      */
     private function getNextSuccessfulFetch(){
         $key = class_basename($this);
-
+        $updated_at = FetcherNextStatus::where('key',$key)->value('next_datetime') ?: date('Y-m-d H:i:s',strtotime('-1 week'));
+        
         return [
-            FetcherNextStatus::where('key',$key)->value('next_datetime') ?: date('Y-m-d H:i:s',strtotime('-2 day')),
+            date('Y-m-d H:i:s',strtotime('-2 minute',strtotime($updated_at))),  //i have added this few minutes to be extra safe on fetching data, and we don't miss any articles
             FetcherNextStatus::where('key',$key)->value('next_page_no') ?: 1,
         ];
     }

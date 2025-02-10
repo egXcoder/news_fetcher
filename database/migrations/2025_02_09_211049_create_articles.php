@@ -17,10 +17,10 @@ class CreateArticles extends Migration
 
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('author')->nullable();
-            $table->text('title')->nullable();
-            $table->text('description')->nullable();
-            $table->text('content')->nullable();
+            $table->string('author')->collation('utf8mb4_general_ci')->nullable();
+            $table->text('title')->collation('utf8mb4_general_ci')->nullable();
+            $table->text('description')->collation('utf8mb4_general_ci')->nullable();
+            $table->text('content')->collation('utf8mb4_general_ci')->nullable();
             $table->string('fetched_from')->nullable();
             $table->string('src_id')->nullable();
             $table->string('src_name')->nullable();
