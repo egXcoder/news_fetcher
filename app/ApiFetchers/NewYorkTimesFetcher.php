@@ -31,8 +31,6 @@ class NewYorkTimesFetcher extends BaseFetcher{
             return $response['response']['docs'];
         }
 
-        dd('called');
-
         $this->set_debug(json_encode($response));
         
         return self::$ERROR_WHILE_FETCHING;
