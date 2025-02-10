@@ -40,6 +40,7 @@ abstract class BaseFetcher{
             }
 
             if(!count($data)){
+                throw new \Exception("fetch method shouldnt return empty array instead return signal for processing complete, then we know sync is done");
                 return false;
             }
 
