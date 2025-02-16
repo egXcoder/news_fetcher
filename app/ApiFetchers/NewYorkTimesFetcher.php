@@ -12,7 +12,7 @@ class NewYorkTimesFetcher extends BaseFetcher{
     protected function fetch($last_updated_at, $page_no)
     {
         $response = Http::get('https://api.nytimes.com/svc/search/v2/articlesearch.json',[
-            'api-key'=>'J7lGGG7wG98bOOgaB3G3zbHj4iA3JCc3 ',
+            'api-key'=>env('NY_TIMES_API_TOKEN'),
             'page'=>$page_no,
             'sort'=>'oldest',
             'begin_date'=>date('Ymd',strtotime($last_updated_at)),

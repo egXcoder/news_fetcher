@@ -13,7 +13,7 @@ class TheGuardianFetcher extends BaseFetcher{
     protected function fetch($last_updated_at, $page_no)
     {
         $response = Http::get('https://content.guardianapis.com/search',[
-            'api-key'=>'c28a75dd-c529-41e2-96d8-426de9c873b2',
+            'api-key'=>env('GUARDIAN_API_TOKEN'),
             'page'=>$page_no,
             'page-size'=>10,
             'order-by'=>'oldest',

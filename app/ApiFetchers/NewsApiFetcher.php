@@ -12,7 +12,7 @@ class NewsApiFetcher extends BaseFetcher{
     protected function fetch($last_updated_at, $page_no)
     {
         $response = Http::withHeaders([
-            'X-Api-Key'=>'72ef32ebef61439386cfcbd1f605370e'
+            'X-Api-Key'=>env('NEWS_API_TOKEN')
         ])
         ->get('https://newsapi.org/v2/everything',[
             'q'=>'*',
