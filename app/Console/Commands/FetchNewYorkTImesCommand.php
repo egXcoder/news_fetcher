@@ -13,7 +13,9 @@ class FetchNewYorkTImesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'newyorktimes:fetch';
+    protected $signature = 'newyorktimes:fetch
+        {--fetch-only-one-page}
+    ';
 
     /**
      * The console command description.
@@ -40,6 +42,11 @@ class FetchNewYorkTImesCommand extends Command
     public function handle()
     {
         $fetcher = new NewYorkTimesFetcher;
+
+        if($this->option('fetch-only-one-page')){
+            $fetcher = $fetcher->fetchOnlyOnePage();
+        }
+
         $fetcher->fetchRecentNews();
     }
 }

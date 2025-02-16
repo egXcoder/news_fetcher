@@ -14,7 +14,9 @@ class FetchTheGuardianCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'theguardian:fetch';
+    protected $signature = 'theguardian:fetch
+        {--fetch-only-one-page}
+    ';
 
     /**
      * The console command description.
@@ -41,6 +43,11 @@ class FetchTheGuardianCommand extends Command
     public function handle()
     {
         $fetcher = new TheGuardianFetcher;
+
+        if($this->option('fetch-only-one-page')){
+            $fetcher = $fetcher->fetchOnlyOnePage();
+        }
+
         $fetcher->fetchRecentNews();
     }
 }

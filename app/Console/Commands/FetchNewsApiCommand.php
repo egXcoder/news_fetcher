@@ -12,7 +12,9 @@ class FetchNewsApiCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'newsapi:fetch';
+    protected $signature = 'newsapi:fetch
+        {--fetch-only-one-page}
+    ';
 
     /**
      * The console command description.
@@ -39,6 +41,11 @@ class FetchNewsApiCommand extends Command
     public function handle()
     {
         $fetcher = new NewsApiFetcher;
+
+        if($this->option('fetch-only-one-page')){
+            $fetcher = $fetcher->fetchOnlyOnePage();
+        }
+
         $fetcher->fetchRecentNews();
     }
 }

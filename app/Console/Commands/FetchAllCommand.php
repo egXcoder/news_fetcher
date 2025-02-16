@@ -51,7 +51,9 @@ class FetchAllCommand extends Command
         $last_run = FetcherNextStatus::where('key',class_basename(NewsApiFetcher::class))->value('updated_at');
         $last_run_from_seconds = time() - strtotime($last_run);
         if($last_run_from_seconds>$this->newsapi_minutes*60){
-            $this->call('newsapi:fetch');
+            $this->call('newsapi:fetch',[
+                '--fetch-only-one-page'=>true
+            ]);
         }
 
 
@@ -60,7 +62,9 @@ class FetchAllCommand extends Command
         $last_run = FetcherNextStatus::where('key',class_basename(TheGuardianFetcher::class))->value('updated_at');
         $last_run_from_seconds = time() - strtotime($last_run);
         if($last_run_from_seconds>$this->theguardian_minutes*60){
-            $this->call('theguardian:fetch');
+            $this->call('theguardian:fetch',[
+                '--fetch-only-one-page'=>true
+            ]);
         }
 
 
@@ -69,7 +73,9 @@ class FetchAllCommand extends Command
         $last_run = FetcherNextStatus::where('key',class_basename(NewYorkTimesFetcher::class))->value('updated_at');
         $last_run_from_seconds = time() - strtotime($last_run);
         if($last_run_from_seconds>$this->ny_minutes*60){
-            $this->call('newyorktimes:fetch');
+            $this->call('newyorktimes:fetch',[
+                '--fetch-only-one-page'=>true
+            ]);
         }
     }
 }

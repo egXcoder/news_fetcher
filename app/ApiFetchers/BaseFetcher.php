@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 abstract class BaseFetcher{
-    public $fetch_only_one_page = null;
+    private $fetch_only_one_page = null;
     public static $ERROR_WHILE_FETCHING = -1;
     public static $PROCESSING_COMPLETE = -2;
 
@@ -59,15 +59,16 @@ abstract class BaseFetcher{
             DB::commit();
 
             $this->set_debug('data saved in database');
-            $this->set_debug('sleeping...');
-
-            
-            sleep(10);
             
             if($this->fetch_only_one_page){
                 $this->set_debug('Fetched Only One Page per your request');
                 return;
             }
+
+            $this->set_debug('sleeping...');
+
+            
+            sleep(10);
         }
 
         $this->setNextSuccessfulFetch($now,1);
