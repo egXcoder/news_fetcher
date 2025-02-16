@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\ArticlesController;
+use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +17,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/articles', [ArticlesController::class,'getArticles'])
+->middleware('throttle:20,1') //throttle the api, then no one can do dos attack, we can change the limit per our agreement on the usage with the frontend 
+->name('articles.get');

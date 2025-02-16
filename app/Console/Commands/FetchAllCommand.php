@@ -41,5 +41,6 @@ class FetchAllCommand extends Command
     {
         $this->call('newsapi:fetch');
         $this->call('theguardian:fetch');
+        $this->call('newyorktimes:fetch');
     }
 }

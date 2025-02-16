@@ -9,7 +9,7 @@ services:
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: sme
+            MYSQL_DATABASE: back
             MYSQL_ROOT_USERNAME: root
             MYSQL_ROOT_PASSWORD: root
         volumes:

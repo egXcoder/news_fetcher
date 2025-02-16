@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\ApiFetchers\TheGuardianApiFetcher;
+use App\ApiFetchers\TheGuardianFetcher;
+use App\Models\Article;
 use Illuminate\Console\Command;
 
 class FetchTheGuardianCommand extends Command
