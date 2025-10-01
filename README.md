@@ -1,29 +1,9 @@
 ## News Fetcher
 
 
-
-DataRequester
-
-New York .. request new york
-news api .. request news api
-guardian .. request guardian
+Pulling News From Various Different News APIs
 
 
-api url
-filters
-auth token 
-data returned
-save into database
-
-
-Saver
-
-
-Commands to launch fetcher
-
-
-Question is: How Frequent would requester runs?
- run in only when possible
 
 [Design Phase 1]
 
