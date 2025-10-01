@@ -3,34 +3,45 @@
 namespace App\Domain\News\Ingestion\Providers;
 
 use App\Domain\News\Ingestion\Contracts\NewsProvider;
+use App\Domain\News\Ingestion\DTO\FetchContext;
+use App\Domain\News\Ingestion\DTO\FetchResult;
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class NYProvider implements NewsProvider{
-    public function fetch()
+    private const API_URL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json';
+    private const SORT_ORDER = 'oldest';
+
+    public function fetch(FetchContext $fetchContext):FetchResult
     {
-        $response = Http::get('https://api.nytimes.com/svc/search/v2/articlesearch.json',[
-            'api-key'=>env('NY_TIMES_API_TOKEN'),
-            'page'=>$page_no,
-            'sort'=>'oldest',
-            'begin_date'=>date('Ymd',strtotime($last_updated_at)),
+        $now = date('Y-m-d H:i:s');
+
+        $response = Http::get(self::API_URL,[
+            'api-key'=>config('services.nytimes.token', env('NY_TIMES_API_TOKEN')),
+            'page'=>$fetchContext->getPageNo(),
+            'sort'=>self::SORT_ORDER,
+            'begin_date'=>date('Ymd',strtotime($fetchContext->getLastUpdatedAt())),
             // 'order-date'=>'last-modified',
             // 'use-date'=>'last-modified',
             // 'show-fields'=>'body,headline',
         ]);
+
+        if (! $response->successful()) {
+            throw new Exception("NY API error: " . $response->body());
+        }
             
-        $response = json_decode($response->body(),true);
+        $responseData = $response->json();
 
-        if($response['status'] == 'OK' && count($response['response']['docs']) === 0){
-            return self::$PROCESSING_COMPLETE;
+        $docs = $responseData['response']['docs'] ?? [];
+
+        if(count($docs) == 0 ){
+            return new FetchResult([],new FetchContext($now,1));
         }
 
-        if($response['status'] == 'OK' && (count($response['response']['docs'])>0)){
-            return $response['response']['docs'];
-        }
-
-        $this->set_debug(json_encode($response));
-        
-        return self::$ERROR_WHILE_FETCHING;
+        return new FetchResult(
+            $response['response']['docs'],
+            new FetchContext($fetchContext->getLastUpdatedAt(),$fetchContext->getPageNo()+1
+        ));
     }
 
     public function map($data)
