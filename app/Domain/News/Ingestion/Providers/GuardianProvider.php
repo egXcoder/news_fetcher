@@ -47,7 +47,7 @@ class GuardianProvider implements NewsProvider{
 
             $result[] = [
                 'src_id'=> $single['id'],
-                'src_api'=>'guadian',
+                'src_api'=>$this->getSourceName(),
                 'author'=> 'the gurdian',
                 'title'=> $single['webTitle'],
                 'description'=> $single['fields']['headline'],
@@ -59,5 +59,10 @@ class GuardianProvider implements NewsProvider{
         }
 
         return $result;
+    }
+
+    public function getSourceName()
+    {
+        return 'guardian';
     }
 }

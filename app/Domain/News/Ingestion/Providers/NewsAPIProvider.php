@@ -42,7 +42,7 @@ class NewsAPIProvider implements NewsProvider{
         foreach($data as $single){
             $result[] = [
                 'src_id'=> sha1($single['author'] . $single['title'] . $single['description']),
-                'src_api'=>'newsapi',
+                'src_api'=>$this->getSourceName(),
                 'author'=> $single['author'],
                 'title'=> $single['title'],
                 'description'=> $single['description'],
@@ -54,5 +54,10 @@ class NewsAPIProvider implements NewsProvider{
         }
 
         return $result;
+    }
+
+    public function getSourceName()
+    {
+        return 'newsapi';
     }
 }

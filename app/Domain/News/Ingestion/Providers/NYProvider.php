@@ -44,7 +44,7 @@ class NYProvider implements NewsProvider{
 
             $result[] = [
                 'src_id'=> $single['_id'],
-                'src_api'=>'ny',
+                'src_api'=>$this->getSourceName(),
                 'author'=> $single['source'],
                 'title'=> $single['headline']['main'],
                 'description'=> $single['lead_paragraph'],
@@ -54,5 +54,10 @@ class NYProvider implements NewsProvider{
                 'src_published_at'=>$single['pub_date'],
             ];
         }
+    }
+
+    public function getSourceName()
+    {
+        return 'ny';
     }
 }
