@@ -30,7 +30,7 @@ instead of building N classes for DataRequester + DataMapper + DataRequest Valid
 
 [Design Phase 3]
 
-i feel its too much for NewsProvider to do 3 things, i can accept it to fetch + map, but isAbleToFetch main idea one of the api can allow fetching every hour while another api can fetch daily
+i feel its too much for NewsProvider to do 3 things, i can accept it to fetch + map, but isAbleToFetch main idea one of the api can allow fetching every hour while another api can fetch daily depend on api allowed quota
 
 
 - NewsProvider (N classes) knows how to fetch + map [strategy]
