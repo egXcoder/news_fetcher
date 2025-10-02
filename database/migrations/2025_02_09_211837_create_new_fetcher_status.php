@@ -13,9 +13,9 @@ class CreateNewFetcherStatus extends Migration
      */
     public function up()
     {
-        Schema::create('fetchers_next_status', function (Blueprint $table) {
+        Schema::create('fetch_contexts', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->nullable();
+            $table->string('api')->nullable();
             $table->timestamp('next_datetime')->nullable();
             $table->string('next_page_no')->nullable();
             $table->timestamps();
@@ -29,6 +29,6 @@ class CreateNewFetcherStatus extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('new_fetcher_status');
+        Schema::dropIfExists('fetch_contexts');
     }
 }

@@ -3,20 +3,15 @@
 namespace App\Domain\News\Ingestion\Services;
 
 use App\Domain\News\Ingestion\Contracts\NewsProvider;
-use App\Domain\News\Ingestion\Policies\FetchPolicy;
-use App\Domain\News\Ingestion\Repositories\FetchStateRepository;
+use App\Domain\News\Ingestion\Repositories\FetchContextRepository;
 use Illuminate\Support\Facades\Log;
 
 class Fetcher{
-    public function fetch(NewsProvider $provider,DataSaver $saver,FetchPolicy $policy, FetchStateRepository $fetchStateRepository):void{
+    public function fetch(NewsProvider $provider,DataSaver $saver, FetchContextRepository $fetchContextRepository):void{
         $sourceName = $provider->getSourceName();
 
-        if(!$policy->canFetch($sourceName)){
-            return;
-        }
-
         try{
-            $fetchContext = $fetchStateRepository->getContext($sourceName);
+            $fetchContext = $fetchContextRepository->getContext($sourceName);
     
             $fetchResult = $provider->fetch($fetchContext);
     
@@ -26,7 +21,7 @@ class Fetcher{
                 $saver->save($data);
             }
 
-            $fetchStateRepository->saveContext($sourceName, $fetchResult->getNextContext());
+            $fetchContextRepository->saveContext($sourceName, $fetchResult->getNextContext());
 
         }catch(\Exception $ex){
             //log and notify
