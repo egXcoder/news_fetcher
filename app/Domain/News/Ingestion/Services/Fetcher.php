@@ -7,21 +7,32 @@ use App\Domain\News\Ingestion\Repositories\FetchContextRepository;
 use Illuminate\Support\Facades\Log;
 
 class Fetcher{
-    public function fetch(NewsProvider $provider,DataSaver $saver, FetchContextRepository $fetchContextRepository):void{
-        $sourceName = $provider->getSourceName();
+    protected $provider;
+    protected $saver;
+    protected $fetchContextRepository;
+
+    public function __construct(NewsProvider $provider,DataSaver $saver, FetchContextRepository $fetchContextRepository)
+    {
+        $this->provider = $provider;
+        $this->saver = $saver;
+        $this->fetchContextRepository = $fetchContextRepository;
+    }
+
+    public function fetch():void{
+        $sourceName = $this->provider->getSourceName();
 
         try{
-            $fetchContext = $fetchContextRepository->getContext($sourceName);
+            $fetchContext = $this->fetchContextRepository->getContext($sourceName);
     
-            $fetchResult = $provider->fetch($fetchContext);
+            $fetchResult = $this->provider->fetch($fetchContext);
     
-            $data = $provider->map($fetchResult->getData());
+            $data = $this->provider->map($fetchResult->getData());
             
             if(!empty($data)){
-                $saver->save($data);
+                $this->saver->save($data);
             }
 
-            $fetchContextRepository->saveContext($sourceName, $fetchResult->getNextContext());
+            $this->fetchContextRepository->saveContext($sourceName, $fetchResult->getNextContext());
 
         }catch(\Exception $ex){
             //log and notify

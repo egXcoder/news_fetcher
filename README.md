@@ -6,6 +6,7 @@ Pulling News From Various Different News APIs
 
 ## Ingestion
 - NewsProvider (N classes) knows how to fetch + map ...  [strategy pattern]
+- NewsProviderFactory (1 class) instantiate provider from its sourcename 
 - FetchContext (1 class) DTO which will hold last_updated_at + page
 - FetchResult (1 class) DTO which will hold data returned from NewProvider + nextFetchContext
 - FetchContextRepository (1 class) to record fetchcontext in database and to retrieve
@@ -16,4 +17,4 @@ Pulling News From Various Different News APIs
 
 
 ## Notice
-- No need to create a class for FetchContext, since it will already live as DTO (then no confusion)
+- No need to create an eloquent model for FetchContext, since it will already live as DTO (then no confusion)
