@@ -19,7 +19,7 @@ class ArticleFactory extends Factory
             'description'=> $this->faker->text(500),
             'content'=> $this->faker->text(10000),
             'src_api'=> array_rand(['ny','guardian','newsapi']),
-            'src_id'=> $this->faker->randomNumber(10),
+            'src_id'=> $this->faker->randomNumber(5),
         ];
     }
 }
