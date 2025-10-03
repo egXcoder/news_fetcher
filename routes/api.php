@@ -18,3 +18,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/articles', [ArticlesController::class,'getArticles'])->name('articles.get');
+Route::get('/articles/search', [ArticlesController::class,'searchArticles'])->name('articles.search');
