@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\News\Ingestion\seeders;
+namespace App\Domain\News\Ingestion\Seeders;
 
 use App\Domain\News\Ingestion\LaravelFactories\ArticleFactory;
 use App\Models\Article;
