@@ -33,9 +33,9 @@ class ArticlesController extends Controller
      *     @OA\Parameter(
      *         name="orderby",
      *         in="query",
-     *         description="Column and direction to order by (e.g., 'src_published_at desc')",
+     *         description="Column and direction to order by (e.g., 'created_at desc')",
      *         required=false,
-     *         @OA\Schema(type="string", default="src_published_at desc", pattern="^(src_published_at|created_at|updated_at)\s+(asc|desc)$")
+     *         @OA\Schema(type="string", default="created_at desc", pattern="^(created_at|created_at|updated_at)\s+(asc|desc)$")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -69,7 +69,7 @@ class ArticlesController extends Controller
             'orderby' => [
                 'sometimes',
                 'string',
-                'regex:/^(src_published_at|created_at|updated_at)\s+(asc|desc)$/i'
+                'regex:/^(created_at|updated_at)\s+(asc|desc)$/i'
             ],
         ]);
 
@@ -77,7 +77,7 @@ class ArticlesController extends Controller
         // Set defaults
         $top = $validated['top'] ?? 10;
         $page = $validated['page'] ?? 1;
-        $orderby = $validated['orderby'] ?? 'src_published_at desc';
+        $orderby = $validated['orderby'] ?? 'created_at desc';
 
         // Parse orderby
         [$column, $direction] = explode(' ', $orderby);
