@@ -8,53 +8,84 @@ use Illuminate\Http\Request;
 class ArticlesController extends Controller
 {
     /**
-     * i didnt do auth around it, because most likely the articles website will be available for public
-     * 
-     * i have used laravel pagination to paginate using page argument
-     * 
-     * also, i tried to be compaitable with odata standard for arguments, i think i have exposed what is needed
-     * i can though add more rules to it if frontend request more filtering power on the data
-     * 
-     * i didnt want to use odata package, because i don't want to expose too much power on this api
-     * 
-     * arguments are
-     * - $top numerical
-     * - $skip numerical
-     * - $orderby updated_at desc
-     * - page numerical
+     * Get articles for public API.
+     *
+     * @OA\Get(
+     *     path="/api/articles",
+     *     summary="Get a paginated list of articles",
+     *     description="Returns a paginated list of articles with optional ordering and page size",
+     *     operationId="getArticles",
+     *     tags={"Articles"},
+     *     @OA\Parameter(
+     *         name="top",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=10, minimum=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1, minimum=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="orderby",
+     *         in="query",
+     *         description="Column and direction to order by (e.g., 'src_published_at desc')",
+     *         required=false,
+     *         @OA\Schema(type="string", default="src_published_at desc", pattern="^(src_published_at|created_at|updated_at)\s+(asc|desc)$")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Paginated list of articles",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(ref="#/components/schemas/Article")
+     *             ),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="total", type="integer"),
+     *             @OA\Property(property="last_page", type="integer")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
      */
-    public function getArticles(){
-        $top = request('$top') ?: 10;
-        $skip = request('$skip') ?: 10;
-        $orderby = request('$orderby') ?: 'src_published_at desc';
+    public function getArticles(Request $request)
+    {
+        // Validate query parameters
+        $validated = $request->validate([
+            'top' => 'sometimes|integer|min:1',
+            'page' => 'sometimes|integer|min:1',
+            'orderby' => [
+                'sometimes',
+                'string',
+                'regex:/^(src_published_at|created_at|updated_at)\s+(asc|desc)$/i'
+            ],
+        ]);
 
-        if(!is_numeric($top)){
-            return [
-                'error'=>'Please Make sure passed top is numerical'
-            ];
-        }
 
-        if(!is_numeric($skip)){
-            return [
-                'error'=>'Please Make sure passed skip is numerical'
-            ];
-        }
+        // Set defaults
+        $top = $validated['top'] ?? 10;
+        $page = $validated['page'] ?? 1;
+        $orderby = $validated['orderby'] ?? 'src_published_at desc';
 
-        $orderby = explode(' ',$orderby);
-        if(!in_array($orderby[0],['src_published_at','created_at','updated_at'])){
-            return [
-                'error'=>'Please Make you are ordering by correct date column'
-            ];
-        }
+        // Parse orderby
+        [$column, $direction] = explode(' ', $orderby);
 
-        if(!in_array($orderby[1],['asc','desc'])){
-            return [
-                'error'=>'only allowed directions are asc or desc'
-            ];
-        }
+        // Fetch paginated articles
+        $articles = Article::orderBy($column, $direction)
+        ->paginate($top, ['*'], 'page', $page);
 
-        return [
-            'success'=>Article::orderBy($orderby[0],$orderby[1])->skip($skip)->paginate($top)
-        ];
+        return response()->json($articles);
     }
 }
