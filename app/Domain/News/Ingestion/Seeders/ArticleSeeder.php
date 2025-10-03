@@ -15,8 +15,12 @@ class ArticleSeeder extends Seeder
      */
     public function run()
     {
-        (new ArticleFactory)
+        $data = (new ArticleFactory)
         ->count(50)
-        ->create([],new Article);
+        ->raw();
+
+        foreach($data as $single){
+            Article::create($single);
+        }
     }
 }
