@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Domain\News\Ingestion\LaravelFactories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

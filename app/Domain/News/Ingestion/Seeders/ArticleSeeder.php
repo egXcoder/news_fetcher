@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\Domain\News\Ingestion\seeders;
 
+use App\Domain\News\Ingestion\LaravelFactories\ArticleFactory;
 use App\Models\Article;
-use Database\Factories\ArticleFactory;
 use Illuminate\Database\Seeder;
 
 class ArticleSeeder extends Seeder
@@ -15,6 +15,8 @@ class ArticleSeeder extends Seeder
      */
     public function run()
     {
-        (new ArticleFactory)->count(50)->create([],new Article);
+        (new ArticleFactory)
+        ->count(50)
+        ->create([],new Article);
     }
 }
