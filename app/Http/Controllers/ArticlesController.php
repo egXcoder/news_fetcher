@@ -17,7 +17,7 @@ class ArticlesController extends Controller
      *     operationId="getArticles",
      *     tags={"Articles"},
      *     @OA\Parameter(
-     *         name="top",
+     *         name="perPage",
      *         in="query",
      *         description="Number of items per page",
      *         required=false,
@@ -64,7 +64,7 @@ class ArticlesController extends Controller
     {
         // Validate query parameters
         $validated = $request->validate([
-            'top' => 'sometimes|integer|min:1',
+            'perPage' => 'sometimes|integer|min:1|max:100',
             'page' => 'sometimes|integer|min:1',
             'orderby' => [
                 'sometimes',
@@ -75,7 +75,7 @@ class ArticlesController extends Controller
 
 
         // Set defaults
-        $top = $validated['top'] ?? 10;
+        $perPage = $validated['perPage'] ?? 10;
         $page = $validated['page'] ?? 1;
         $orderby = $validated['orderby'] ?? 'created_at desc';
 
@@ -84,7 +84,8 @@ class ArticlesController extends Controller
 
         // Fetch paginated articles
         $articles = Article::orderBy($column, $direction)
-        ->paginate($top, ['*'], 'page', $page);
+        ->paginate($perPage, ['*'], 'page', $page);
+
 
         return response()->json($articles);
     }
