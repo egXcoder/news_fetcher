@@ -67,9 +67,9 @@ class GuardianProvider implements NewsProvider{
                 'title'=> $single['webTitle'],
                 'description'=> $single['fields']['headline'],
                 'content'=>$single['fields']['body'],
-                'src_name'=>'the guardian',
-                'src_url'=>$single['webUrl'],
-                'src_published_at'=>$single['webPublicationDate'],
+                // 'src_name'=>'the guardian',
+                // 'src_url'=>$single['webUrl'],
+                // 'src_published_at'=>$single['webPublicationDate'],
             ];
         }
 

@@ -60,9 +60,9 @@ class NYProvider implements NewsProvider{
                 'title'=> $single['headline']['main'],
                 'description'=> $single['lead_paragraph'],
                 // 'content'=>'', //the api don't provide content of their articles, i can scrap it by it may trigger legal consequences
-                'src_url'=>$single['web_url'],
-                'src_name'=>$single['source'],
-                'src_published_at'=>$single['pub_date'],
+                // 'src_url'=>$single['web_url'],
+                // 'src_name'=>$single['source'],
+                // 'src_published_at'=>$single['pub_date'],
             ];
         }
     }

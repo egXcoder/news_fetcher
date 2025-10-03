@@ -65,9 +65,9 @@ class NewsAPIProvider implements NewsProvider{
                 'title'=> $single['title'],
                 'description'=> $single['description'],
                 'content'=>$single['content'],
-                'src_url'=>$single['url'],
-                'src_name'=>$single['source']['name'],
-                'src_published_at'=>$single['publishedAt'],
+                // 'src_url'=>$single['url'],
+                // 'src_name'=>$single['source']['name'],
+                // 'src_published_at'=>$single['publishedAt'],
             ];
         }
 
