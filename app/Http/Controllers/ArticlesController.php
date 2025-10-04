@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class ArticlesController extends Controller
@@ -89,12 +91,21 @@ class ArticlesController extends Controller
         // Parse orderby
         [$column, $direction] = explode(' ', $orderby);
 
+        $cacheKey = "queries_get_articles_".$perPage."_".$page."_".$orderby;
+
+        if($cached = Cache::store('redis')->get($cacheKey)){
+            return $cached;
+        }
+
         // Fetch paginated articles
         $articles = Article::orderBy($column, $direction)
         ->paginate($perPage, ['*'], 'page', $page);
 
+        $response = response()->json($articles);
 
-        return response()->json($articles);
+        Cache::store('redis')->get($cacheKey,$response,300);
+
+        return $response;
     }
 
     /**
