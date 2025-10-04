@@ -16,7 +16,6 @@ class ArticlesController extends Controller
      *     description="Returns a paginated list of articles with optional ordering and page size",
      *     operationId="getArticles",
      *     tags={"Articles"},
-     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="perPage",
      *         in="query",
@@ -105,7 +104,6 @@ class ArticlesController extends Controller
      *     description="Search for articles by keyword with optional pagination and ordering",
      *     operationId="searchArticles",
      *     tags={"Articles"},
-     *
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
