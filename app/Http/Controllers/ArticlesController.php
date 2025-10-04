@@ -10,20 +10,19 @@ use Illuminate\Support\Facades\Validator;
 class ArticlesController extends Controller
 {
     /**
-     * Get articles for public API.
-     *
      * @OA\Get(
-     *     path="/api/articles",
+     *     path="/api/v1/articles",
      *     summary="Get a paginated list of articles",
      *     description="Returns a paginated list of articles with optional ordering and page size",
      *     operationId="getArticles",
      *     tags={"Articles"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="perPage",
      *         in="query",
      *         description="Number of items per page",
      *         required=false,
-     *         @OA\Schema(type="integer", default=10, minimum=1)
+     *         @OA\Schema(type="integer", default=10, minimum=1,maximum=100)
      *     ),
      *     @OA\Parameter(
      *         name="page",
@@ -101,7 +100,7 @@ class ArticlesController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/articles/search",
+     *     path="/api/v1/articles/search",
      *     summary="Search articles",
      *     description="Search for articles by keyword with optional pagination and ordering",
      *     operationId="searchArticles",
